@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import time
 import re
 import os
+import sys
 
 def get_web_page(url):
     headers = {
@@ -94,6 +95,7 @@ if __name__ == "__main__":
     token = os.environ['fb_token']
     recipient = os.environ['recipient']
     board = "Drama-Ticket"
+    base = sys.argv[1]
     url = "https://www.ptt.cc/bbs/%s/index.html"%board    
     page = get_web_page(url)
     if page:
@@ -101,7 +103,7 @@ if __name__ == "__main__":
         current_articles = get_articles(page, date)
     #    for post in current_articles:
     #        print(post)
-        fname = "./%s.log"%date.replace("/","_")
+        fname = "%s/%s.log"%(base,date.replace("/","_"))
         links = []
         if os.path.exists(fname):
             with open(fname,'r') as f:
@@ -109,8 +111,8 @@ if __name__ == "__main__":
                 links = [link[:-1] for link in links]
 
         for post in current_articles:
-            if "[售票]" in post['title'] and "綺貞" in post['title']:                
-            #if "綺貞" in post['title']:            
+            #if "[售票]" in post['title'] and "綺貞" in post['title']:                
+            if "綺貞" in post['title']:            
                 jump = False
                 for link in links:
                     if link == post['title']:
