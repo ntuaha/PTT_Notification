@@ -111,8 +111,8 @@ if __name__ == "__main__":
                 links = [link[:-1] for link in links]
 
         for post in current_articles:
-            #if "[售票]" in post['title'] and "綺貞" in post['title']:                
-            if "綺貞" in post['title']:            
+            if "[售票]" in post['title'] and "綺貞" in post['title']:                
+            #if "綺貞" in post['title']:            
                 jump = False
                 for link in links:
                     if link == post['title']:
