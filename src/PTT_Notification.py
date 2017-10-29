@@ -98,6 +98,9 @@ if __name__ == "__main__":
     base = sys.argv[1]
     url = "https://www.ptt.cc/bbs/%s/index.html"%board    
     page = get_web_page(url)
+    with open(sys.argv[1]+"/work.log","a+") as f:
+        f.write("[check] %s\n"%time.strftime("%H:%M:%S"))
+
     if page:
         date = time.strftime("%m/%d").lstrip('0')  # 今天日期, 去掉開頭的 '0' 以符合 PTT 網站格式
         current_articles = get_articles(page, date)
