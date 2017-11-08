@@ -4,6 +4,8 @@ import time
 import re
 import os
 import sys
+import subprocess
+import json
 
 def get_web_page(url):
     headers = {
@@ -20,7 +22,7 @@ def get_articles(html, date):
     articles = []  # 儲存取得的文章資料
     soup = BeautifulSoup(html, 'html.parser')
     divs = soup.find_all('div', 'r-ent')
-    go_prev = False
+    go_prev = True 
     for d in divs:
         if d.find('div', 'date').string == date:  # 發文日期正確
             # 取得推文數
@@ -41,12 +43,13 @@ def get_articles(html, date):
                     'push_count': push_count
                 })
         else:
-           go_prev = True
+           go_prev = False
         
-    if(go_prev):
-        a = soup.find_all("a",string=re.compile("‹ 上頁"))
-        page = get_web_page("https://www.ptt.cc/"+a[0]['href'])
-        articles.extend(get_articles(page,date))
+    #if(go_prev):
+    #    a = soup.find_all("a",string=re.compile("‹ 上頁"))
+    #    page = get_web_page("https://www.ptt.cc/"+a[0]['href'])
+    #    articles.extend(get_articles(page,date))
+    
         
     return articles
 
@@ -82,7 +85,12 @@ def sendToFacebook(recipient,text,link):
       
     }
     #print(payload)
-    r = requests.post(api_url,json=payload,headers=headers)
+    #r = requests.post(api_url,json=payload)
+    cmd = "curl -X POST %s -H 'content-type: application/json' -d '%s' " % (
+        api_url, json.dumps(payload))
+    print(cmd)
+    subprocess.call(cmd,shell=True)
+    #os.system("curl -X -H 'content-type: application/json'  POST -''"%)
     #print(r.text)
     return True
 
@@ -115,7 +123,8 @@ if __name__ == "__main__":
 
         for post in current_articles:
             if "[售票]" in post['title'] and "綺貞" in post['title']:                
-            #if "綺貞" in post['title']:            
+            #if "綺貞" in post['title']: 
+            #if "[售票]" in post['title']:           
                 jump = False
                 for link in links:
                     if link == post['title']:
