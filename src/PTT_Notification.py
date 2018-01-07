@@ -23,8 +23,9 @@ def get_articles(html, date):
     soup = BeautifulSoup(html, 'html.parser')
     divs = soup.find_all('div', 'r-ent')
     go_prev = True 
+    print(len(divs))
     for d in divs:
-        if d.find('div', 'date').string == date:  # 發文日期正確
+        if d.find('div', 'date').string.lstrip() == date:  # 發文日期正確
             # 取得推文數
             push_count = 0
             if d.find('div', 'nrec').string:
@@ -50,7 +51,7 @@ def get_articles(html, date):
     #    page = get_web_page("https://www.ptt.cc/"+a[0]['href'])
     #    articles.extend(get_articles(page,date))
     
-        
+    print(len(articles))    
     return articles
 
 
@@ -107,7 +108,7 @@ if __name__ == "__main__":
     url = "https://www.ptt.cc/bbs/%s/index.html"%board    
     page = get_web_page(url)
     with open(sys.argv[1]+"/work.log","a+") as f:
-        f.write("[check] %s\n"%time.strftime("%H:%M:%S"))
+        f.write("[check] %s\n"%time.strftime("%Y-%m-%d %H:%M:%S"))
 
     if page:
         date = time.strftime("%m/%d").lstrip('0')  # 今天日期, 去掉開頭的 '0' 以符合 PTT 網站格式
